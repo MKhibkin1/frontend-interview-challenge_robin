@@ -1,0 +1,67 @@
+.filter-table{
+    display: flex; 
+    align-items: center;
+    width: 100%;
+    min-height: 500px;    
+    /* background-color: khaki; */
+    display:flex;
+    flex-direction: column;
+}
+
+.filter-table .header-bar{
+    flex-basis: 15%;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.filter-table .header-bar h2{
+    font-size: 1.5rem;
+}
+
+.filter-table .users-table{
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 3fr 6fr;
+    /* align-items: center; */
+    align-content: center;
+    border-right: solid #D3D3D3 2px;
+    border-bottom: solid #D3D3D3 2px;
+}
+
+.filter-table .users-table *{
+    border-top:solid #D3D3D3 2px;
+    border-left: solid #D3D3D3 2px;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: .5rem;
+
+}
+
+.filter-table .users-table .header-cell{
+    background-color: aliceblue;
+    font-weight: bolder;
+}
+
+.filter-table .users-table .user-event{
+    display: contents;
+}
+
+.filter-button{
+    border-radius: 5px !important;
+
+}
+
+.user-filter{
+    border-bottom: 1px grey;
+}
+
+.bp4-popover2-content{
+    
+
+}
+
+
+/* Remove focus border from input */ 
