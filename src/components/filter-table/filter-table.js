@@ -8,30 +8,6 @@ import moment from 'moment';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
-const menuItemTheme = createTheme({
-    root: {
-        background: 'transparent',
-        '&$selected': { // <-- mixing the two classes
-          backgroundColor: 'transparent'
-        }
-      }
-  });
-
-const inputTheme = createTheme({
-    root: {
-        "& $notchedOutline": {
-          borderColor: "red"
-        },
-        "&:hover $notchedOutline": {
-          borderColor: "blue"
-        },
-        "&$focused $notchedOutline": {
-          borderColor: "green"
-        }
-      },
-    
-})
-
 
 export default class FilterTable extends Component{
 
@@ -98,7 +74,6 @@ export default class FilterTable extends Component{
     }
 
     renderUsers = () => {
-        console.log(this.state.userFilter)
         const users = this.state.userFilter ? this.state.users.filter(user => user.user_name === this.state.userFilter) 
         : this.state.users
         //Some times have format of single hour
