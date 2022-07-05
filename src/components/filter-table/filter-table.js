@@ -7,8 +7,6 @@ import MenuItem from '@mui/material/MenuItem';
 import moment from 'moment';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-
-
 export default class FilterTable extends Component{
 
     state = {users: [], userFilter: ''}
@@ -28,7 +26,7 @@ export default class FilterTable extends Component{
               maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
               width: 250,
               border: "solid #D3D3D3 2px",
-              marginTop: ".5rem"
+              marginTop: ".1rem"
             },
           },
           anchorOrigin: {
