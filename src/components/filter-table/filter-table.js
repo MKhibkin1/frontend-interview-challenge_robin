@@ -1,20 +1,27 @@
 import './filter-table.css'
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import actions from '../../backend-services/actions'
+import * as types from '../../backend-services/actions';
 
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
-import moment from 'moment';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
-export default class FilterTable extends Component{
+import moment from 'moment';
+
+class ConnectedFilterTable extends Component{
 
     state = {users: [], userFilter: ''}
 
     componentDidMount = () => {
-        fetch("http:localhost:8080/data")
-        .then(resp => resp.json())
-        .then(users => this.setState({users}))
+        // fetch("http:localhost:8080/data")
+        // .then(resp => resp.json())
+        // .then(users => this.setState({users}))
+        this.props.loadMeetings()
+
     }
 
     renderFilterButton = () => {
@@ -49,16 +56,16 @@ export default class FilterTable extends Component{
         return(
             <Select
                 displayEmpty
-                value={this.state.userFilter}
+                value={this.props.userFilter}
                 renderValue={(val => val ? val : "Filter by user")}
-                onChange={(e) => this.setState({userFilter:e.target.value})}
+                onChange={(e) => this.props.setUserFilter(e.target.value)}
                 input={<OutlinedInput 
                     style={{border: "solid #D3D3D3 1px", width: "250px", height: "2.5rem"}}
                 />}
                 MenuProps={MenuProps}
                 inputProps={inputProps}
                 >
-                {this.state.users.map((user) => (
+                {this.props.meetings.map((user) => (
                     <MenuItem
                         key={user.user_id}
                         value={user.user_name}
@@ -72,8 +79,8 @@ export default class FilterTable extends Component{
     }
 
     renderUsers = () => {
-        const users = this.state.userFilter ? this.state.users.filter(user => user.user_name === this.state.userFilter) 
-        : this.state.users
+        const users = this.props.userFilter ? this.props.meetings.filter(user => user.user_name === this.props.userFilter) 
+        : this.props.meetings
         //Some times have format of single hour
         const dateFormats = [
             "YYYY-MM-DDTHH:mm",
@@ -97,6 +104,9 @@ export default class FilterTable extends Component{
             })
         )
 
+
+
+
         return(
            <div className="users-table">
                 <div className="header-cell"> User</div>
@@ -108,6 +118,28 @@ export default class FilterTable extends Component{
         )
     }
 
+
+    renderTable = () => {
+        //Loading state for component
+        if(this.props.meetingsRequested){
+            return(
+                <Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                </Box>
+            )
+        }
+
+        //Error state for loading a component
+        if(this.props.meetingsRequestSuccess !== types.REQUEST_SUCCESS){
+            return(
+                <div>
+                    Error in retrieving meetings
+                </div>
+            )
+        }
+        return(this.renderUsers())
+    }
+
     render(){
         return(
             <div className="filter-table">
@@ -115,8 +147,33 @@ export default class FilterTable extends Component{
                     <h2>Meetings</h2>
                     {this.renderFilterButton()}
                 </div>
-                {this.renderUsers()}
+                {this.renderTable()}
             </div>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return(
+        {
+            userFilter: state.user.filter, 
+            meetings: state.user.meetings.data,
+            meetingsRequested: state.user.meetings.requested,
+            meetingsRequestSuccess: state.user.meetings.successful            
+        }
+    )
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    // Redux saga for potential side effects to loading meetings
+    loadMeetings: () => dispatch(actions.user.loadMeetings()),
+    // Pure redux for simple value set
+    setUserFilter: (user) => dispatch(actions.user.filterByUser(user))
+})
+
+const FilterTable = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ConnectedFilterTable)
+
+export default FilterTable
